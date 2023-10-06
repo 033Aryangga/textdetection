@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Deteksi Teks dari Gambar</title>
+    <!-- Tambahkan referensi ke library Cropper.js -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.11/cropper.min.css">
+</head>
+<body>
+    <h1>Deteksi Teks pada Gambar</h1>
+    <p>Unggah gambar dan dapatkan teks anda dengan cepat! Anda juga dapat memilih area yang ingin anda deteksi.</p>
+    <input type="file" id="imageInput" accept="image/*">
+    <img id="uploadedImage" alt="Gambar yang diunggah" style="display: none;" width="500px" height="500px">
+    <!-- Tambahkan elemen untuk area crop -->
+    <div>
+        <button id="cropButton">Potong</button>
+        <img id="croppedImage" alt="Hasil Crop" style="display: none;" width="200px" height="auto">
+    </div>
+    <button id="detectButton">Deteksi Teks</button>
+    <div id="resultText"></div>
+    <!-- Tambahkan elemen tombol untuk menyalin teks -->
+    <button id="copyTextButton">Salin Teks</button>
+
+
+    <!-- Tambahkan referensi ke library Cropper.js -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.11/cropper.min.js"></script>
+    
+    <script src='https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js'></script>
+    
+    <script>
+        const imageInput = document.getElementById('imageInput');
+        const uploadedImage = document.getElementById('uploadedImage');
+        const croppedImage = document.getElementById('croppedImage');
+        const cropButton = document.getElementById('cropButton');
+        const detectButton = document.getElementById('detectButton');
+        const resultText = document.getElementById('resultText');
+        const copyTextButton = document.getElementById('copyTextButton');
+        let cropper;
+
+        imageInput.addEventListener('change', function () {
+            uploadedImage.src = URL.createObjectURL(this.files[0]);
+            uploadedImage.style.display = 'block';
+
+            // Inisialisasi Cropper
+            cropper = new Cropper(uploadedImage, {
+                aspectRatio: NaN, // Sesuaikan dengan rasio aspek yang Anda inginkan
+                viewMode: NaN, // Tampilkan dalam mode "crop box"
+            });
+        });
+
+        cropButton.addEventListener('click', function () {
+            // Dapatkan data gambar yang dicrop
+            const croppedDataUrl = cropper.getCroppedCanvas().toDataURL();
+            croppedImage.src = croppedDataUrl;
+            croppedImage.style.display = 'block';
+        });
+
+        detectButton.addEventListener('click', function () {
+            const selectedImage = croppedImage.style.display === 'block' ? croppedImage : uploadedImage;
+
+            Tesseract.recognize(
+                selectedImage.src,
+                'eng', 'ind', //kode bahasa yang didukung
+                { logger: info => console.log(info) }
+            ).then(({ data: { text } }) => {
+                resultText.textContent = text;
+            });
+        });
+
+        function copyTextToClipboard() {
+            const textToCopy = resultText.textContent;
+
+    // Buat elemen input teks sementara
+            const tempInput = document.createElement('input');
+            tempInput.value = textToCopy;
+            document.body.appendChild(tempInput);
+
+    // Pilih teks dalam elemen input
+            tempInput.select();
+            tempInput.setSelectionRange(0, 99999); // Untuk dukungan browser yang beragam
+
+    // Salin teks ke clipboard
+            document.execCommand('copy');
+
+    // Hapus elemen input sementara
+            document.body.removeChild(tempInput);
+
+        }
+
+// Tampilkan tombol "Salin Teks" jika ada teks yang dideteksi
+        resultText.addEventListener('input', function () {
+            if (resultText.textContent.length > 0) {
+            copyTextButton.style.display = 'inline-block';
+            } else {
+            copyTextButton.style.display = 'none';
+            }
+        });
+
+// Tambahkan event listener ke tombol "Salin Teks"
+        copyTextButton.addEventListener('click', copyTextToClipboard);
+
+    </script>
+</body>
+</html>
