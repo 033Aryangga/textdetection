@@ -2,17 +2,29 @@ body {
     font-family: Arial, sans-serif;
     margin: 0;
     padding: 0;
-    background: linear-gradient(to bottom, navy, red);
+    background: linear-gradient(to bottom, navy, black);
     height: 50rem;
     background-repeat: no-repeat;
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: column;
+    height: fit-content;
 }
 
 h1 {
+    color: aliceblue;
     text-align: center;
     margin-top: 20px;
 }
 
 p {
+    color: aliceblue;
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+p1 {
+    color: black;
     text-align: center;
     margin-bottom: 20px;
 }
@@ -22,9 +34,15 @@ p {
     margin: 0 auto;
     padding: 20px;
     border-radius: 5px;
-    /* background: none; */
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    background: linear-gradient(to bottom, navy, red);
+    background: none;
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: column;
+    height: fit-content;
+    gap: 15px;
+}
+.button-upload {
+    text-align: center;
 }
 
 .drop-zone {
@@ -46,11 +64,17 @@ p {
 
 .image-container {
     text-align: center;
+    max-height: 300px;
+    max-width: 300px;
 }
 
-.crop-container {
-    width: 400px;
-    height: auto;
+.container-crop-button {
+    /* width: 200px; */
+}
+
+.crop-container img {
+    max-width: 100px;
+    max-height: 300px;
 }
 
 #uploadedImage, #croppedImage {
@@ -60,28 +84,23 @@ p {
     margin: 20px 0;
 }
 
-.button-container {
-    text-align: center;
+#resultText {
+    color: aliceblue;
 }
 
 button {
     background-color: #007bff;
-    color: #fff;
-    padding: 10px 20px;
+    color: aliceblue;
+    padding: 10px 0;
     border: none;
     cursor: pointer;
     border-radius: 5px;
     font-size: 16px;
     margin: 10px;
+    width: 200px;
+    transition: all .3s;
 }
-
-label {
-    background-color: #007bff;
-    color: #fff;
-    padding: 10px 20px;
-    border: none;
-    cursor: pointer;
-    border-radius: 5px;
-    font-size: 16px;
-    margin: 10px;
+button:hover {
+    background-color: brown;
+    color: aliceblue;
 }
