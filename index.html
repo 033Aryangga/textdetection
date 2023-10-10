@@ -13,10 +13,10 @@
         <p>Unggah Gambar atau Seret dan Lepaskan di area berikut untuk memulai.</p>
 
         <div id="dropZone" class="drop-zone">
-            <p>Seret dan Lepaskan gambar anda disini</p>
+            <p1>Seret dan Lepaskan gambar anda disini</p1>
         </div>
 
-        <label for="imageInput">Unggah Gambar</label>
+        <button for="imageInput" class="button-upload">Unggah Gambar</button>
         <input type="file" id="imageInput" accept="image/*" style="display: none;">
                 
 
@@ -24,7 +24,7 @@
             <img id="uploadedImage" alt="Gambar yang diunggah">
         </div>
 
-        <div>
+        <div class="container-crop-button">
             <button id="cropButton">Potong</button>
             <div class="crop-container">
                 <img id="croppedImage" alt="Hasil Crop">
