@@ -6,28 +6,40 @@
     <title>Deteksi Teks dari Gambar</title>
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.6.1/cropper.min.css">
-    
 </head>
 <body>
-    <h1>Deteksi Teks pada Gambar</h1>
-    <p>Unggah gambar atau seret dan lepaskan di area berikut untuk memulai.</p>
-    
-    <div id="dropZone" class="drop-zone">
-        <p>Drag dan drop gambar di sini atau klik untuk memilih file</p>
+    <div class="container">
+        <h1>Deteksi Teks pada Gambar</h1>
+        <p>Unggah Gambar atau Seret dan Lepaskan di area berikut untuk memulai.</p>
+
+        <div id="dropZone" class="drop-zone">
+            <p>Seret dan Lepaskan gambar anda disini</p>
+        </div>
+
+        <label for="imageInput">Unggah Gambar</label>
+        <input type="file" id="imageInput" accept="image/*" style="display: none;">
+                
+
+        <div class="image-container">
+            <img id="uploadedImage" alt="Gambar yang diunggah">
+        </div>
+
+        <div>
+            <button id="cropButton">Potong</button>
+            <div class="crop-container">
+                <img id="croppedImage" alt="Hasil Crop">
+            </div>
+        </div>
+
+        <div class="button-container">
+            <button id="detectButton">Deteksi Teks</button>
+        </div>
+        <div id="resultText"></div>
+
+        <div class="button-container">
+            <button id="copyTextButton">Salin Teks</button>
+        </div>
     </div>
-    
-    <input type="file" id="imageInput" accept="image/*">
-    <img id="uploadedImage" alt="Gambar yang diunggah" style="display: none;" width="400px" height="400px">
-    
-    <div>
-        <button id="cropButton">Potong</button>
-        <img id="croppedImage" alt="Hasil Crop" style="display: none;" width="300px" height="auto">
-    </div>
-    
-    <button id="detectButton">Deteksi Teks</button>
-    <div id="resultText"></div>
-    
-    <button id="copyTextButton">Salin Teks</button>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.11/cropper.min.js"></script>
     <script src='https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js'></script>
