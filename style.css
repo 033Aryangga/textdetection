@@ -9,6 +9,7 @@ body {
     flex-wrap: wrap;
     flex-direction: column;
     min-height: 100%vh;
+    height: fit-content;
 }
 
 h1 {
