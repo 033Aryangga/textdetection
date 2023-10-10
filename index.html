@@ -4,30 +4,34 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Deteksi Teks dari Gambar</title>
-    <!-- Tambahkan referensi ke library Cropper.js -->
+    <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.6.1/cropper.min.css">
+    
 </head>
 <body>
     <h1>Deteksi Teks pada Gambar</h1>
-    <p>Unggah gambar dan dapatkan teks anda dengan cepat! Anda juga dapat memilih area yang ingin anda deteksi.</p>
+    <p>Unggah gambar atau seret dan lepaskan di area berikut untuk memulai.</p>
+    
+    <div id="dropZone" class="drop-zone">
+        <p>Drag dan drop gambar di sini atau klik untuk memilih file</p>
+    </div>
+    
     <input type="file" id="imageInput" accept="image/*">
-    <img id="uploadedImage" alt="Gambar yang diunggah" style="display: none;" width="500px" height="500px">
-    <!-- Tambahkan elemen untuk area crop -->
+    <img id="uploadedImage" alt="Gambar yang diunggah" style="display: none;" width="400px" height="400px">
+    
     <div>
         <button id="cropButton">Potong</button>
-        <img id="croppedImage" alt="Hasil Crop" style="display: none;" width="200px" height="auto">
+        <img id="croppedImage" alt="Hasil Crop" style="display: none;" width="300px" height="auto">
     </div>
+    
     <button id="detectButton">Deteksi Teks</button>
     <div id="resultText"></div>
-    <!-- Tambahkan elemen tombol untuk menyalin teks -->
+    
     <button id="copyTextButton">Salin Teks</button>
 
-
-    <!-- Tambahkan referensi ke library Cropper.js -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.6.1/cropper.min.js"></script>
-    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.11/cropper.min.js"></script>
     <script src='https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js'></script>
-    
+
     <script>
         const imageInput = document.getElementById('imageInput');
         const uploadedImage = document.getElementById('uploadedImage');
@@ -36,21 +40,19 @@
         const detectButton = document.getElementById('detectButton');
         const resultText = document.getElementById('resultText');
         const copyTextButton = document.getElementById('copyTextButton');
+        const dropZone = document.getElementById('dropZone');
         let cropper;
 
         imageInput.addEventListener('change', function () {
             uploadedImage.src = URL.createObjectURL(this.files[0]);
             uploadedImage.style.display = 'block';
-
-            // Inisialisasi Cropper
             cropper = new Cropper(uploadedImage, {
-                aspectRatio: NaN, // Sesuaikan dengan rasio aspek yang Anda inginkan
-                viewMode: 1, // Tampilkan dalam mode "crop box"
+                aspectRatio: NaN,
+                viewMode: 1,
             });
         });
 
         cropButton.addEventListener('click', function () {
-            // Dapatkan data gambar yang dicrop
             const croppedDataUrl = cropper.getCroppedCanvas().toDataURL();
             croppedImage.src = croppedDataUrl;
             croppedImage.style.display = 'block';
@@ -61,7 +63,7 @@
 
             Tesseract.recognize(
                 selectedImage.src,
-                'eng', 'ind', //kode bahasa yang didukung
+                'eng', 'ind',
                 { logger: info => console.log(info) }
             ).then(({ data: { text } }) => {
                 resultText.textContent = text;
@@ -70,36 +72,56 @@
 
         function copyTextToClipboard() {
             const textToCopy = resultText.textContent;
-
-    // Buat elemen input teks sementara
             const tempInput = document.createElement('input');
             tempInput.value = textToCopy;
             document.body.appendChild(tempInput);
-
-    // Pilih teks dalam elemen input
             tempInput.select();
-            tempInput.setSelectionRange(0, 99999); // Untuk dukungan browser yang beragam
-
-    // Salin teks ke clipboard
+            tempInput.setSelectionRange(0, 99999);
             document.execCommand('copy');
-
-    // Hapus elemen input sementara
             document.body.removeChild(tempInput);
-
         }
 
-// Tampilkan tombol "Salin Teks" jika ada teks yang dideteksi
         resultText.addEventListener('input', function () {
             if (resultText.textContent.length > 0) {
-            copyTextButton.style.display = 'inline-block';
+                copyTextButton.style.display = 'inline-block';
             } else {
-            copyTextButton.style.display = 'none';
+                copyTextButton.style.display = 'none';
             }
         });
 
-// Tambahkan event listener ke tombol "Salin Teks"
         copyTextButton.addEventListener('click', copyTextToClipboard);
 
+        dropZone.addEventListener('dragenter', (e) => {
+            e.preventDefault();
+            dropZone.classList.add('drag-over');
+        });
+
+        dropZone.addEventListener('dragleave', (e) => {
+            e.preventDefault();
+            dropZone.classList.remove('drag-over');
+        });
+
+        dropZone.addEventListener('dragover', (e) => {
+            e.preventDefault();
+        });
+
+        dropZone.addEventListener('drop', (e) => {
+            e.preventDefault();
+            dropZone.classList.remove('drag-over');
+
+            const droppedFile = e.dataTransfer.files[0];
+
+            if (droppedFile.type.startsWith('image/')) {
+                uploadedImage.src = URL.createObjectURL(droppedFile);
+                uploadedImage.style.display = 'block';
+                cropper = new Cropper(uploadedImage, {
+                    aspectRatio: NaN,
+                    viewMode: 1,
+                });
+            } else {
+                alert('Hanya file gambar yang diizinkan.');
+            }
+        });
     </script>
 </body>
 </html>
